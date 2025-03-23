@@ -56,3 +56,29 @@ AddEventHandler('vehiclerental:spawnVehicle', function(model)
 
     ESX.ShowNotification("You have rented a " .. model .. ". Return it to avoid a fine!")
 end)
+
+Citizen.CreateThread(function()
+    local npcModel = GetHashKey("a_m_m_business_01")
+    
+    RequestModel(npcModel)
+    while not HasModelLoaded(npcModel) do
+        Wait(500)
+    end
+
+    local npc = CreatePed(4, npcModel, -56.92, -1096.76, 26.42, 90.0, false, true)
+    SetEntityInvincible(npc, true)
+    FreezeEntityPosition(npc, true)
+    SetBlockingOfNonTemporaryEvents(npc, true)
+
+    exports['qb-target']:AddTargetEntity(npc, {
+        options = {
+            {
+                event = "vehiclerental:openMenu",
+                icon = "fas fa-car",
+                label = "Rent a Vehicle"
+            }
+        },
+        distance = 2.5
+    })
+end)
+
